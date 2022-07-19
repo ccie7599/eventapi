@@ -1,8 +1,16 @@
 [
     {
-        "id": "ca825459.08851",
+        "id": "07533ae1fbb04e11",
         "type": "tab",
-        "label": "Distributed Transaction Event Log",
+        "label": "Connector Service for Origin Events",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1a2d207f770bfa25",
+        "type": "tab",
+        "label": "Realtime Event Push via pub/sub",
         "disabled": false,
         "info": "",
         "env": []
@@ -10,7 +18,15 @@
     {
         "id": "48b4356fe2e4f9db",
         "type": "tab",
-        "label": "Stock API",
+        "label": "Event API",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d7c53fda52da9707",
+        "type": "tab",
+        "label": "Flow 2",
         "disabled": false,
         "info": "",
         "env": []
@@ -207,363 +223,294 @@
         "hidden": false
     },
     {
-        "id": "2f6f0988.fc9d46",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "transaction service",
-        "info": "",
-        "x": 340,
+        "id": "4a829b544243102d",
+        "type": "redis-in",
+        "z": "07533ae1fbb04e11",
+        "server": "",
+        "command": "blpop",
+        "name": "Push from DB",
+        "topic": "",
+        "obj": true,
+        "timeout": 0,
+        "x": 130,
         "y": 80,
-        "wires": []
-    },
-    {
-        "id": "55cc638.a53099c",
-        "type": "http in",
-        "z": "ca825459.08851",
-        "name": "service endpoint for transactions - /meijer",
-        "url": "/meijer",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 270,
-        "y": 160,
         "wires": [
             [
-                "787f2393.eca254"
+                "1b1486aa54c3e87f"
             ]
         ]
     },
     {
-        "id": "787f2393.eca254",
+        "id": "1b1486aa54c3e87f",
         "type": "mqtt out",
-        "z": "ca825459.08851",
-        "name": "Endpoint publishes message to Edge Connnect - topic transaction_log",
-        "topic": "demo/meijer/transaction_log",
+        "z": "07533ae1fbb04e11",
+        "name": "Publish Real-time updates to data broker",
+        "topic": "demo/cdi/race",
         "qos": "",
-        "retain": "",
+        "retain": "true",
         "respTopic": "",
         "contentType": "",
         "userProps": "",
         "correl": "",
         "expiry": "",
         "broker": "3c9fafa.7dd6a5",
-        "x": 750,
-        "y": 160,
+        "x": 660,
+        "y": 180,
         "wires": []
     },
     {
-        "id": "91bd0254.b85a1",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Option - HTTP endpoint for transactions",
-        "info": "",
-        "x": 260,
-        "y": 120,
-        "wires": []
+        "id": "c0fb0a89f4c3cfc3",
+        "type": "kafka-consumer",
+        "z": "07533ae1fbb04e11",
+        "outOfRangeOffset": "earliest",
+        "fromOffset": "latest",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "1b1486aa54c3e87f"
+            ]
+        ]
     },
     {
-        "id": "7a734432.89fe44",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Option - Client connects directly via MQTT",
-        "info": "",
-        "x": 270,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "711730ff.16818",
+        "id": "811fdc459da8180c",
         "type": "inject",
-        "z": "ca825459.08851",
-        "name": "Simulated Client Transaction",
+        "z": "07533ae1fbb04e11",
+        "name": "Inject new odds every second",
         "props": [
             {
-                "p": "payload"
+                "p": "payload.timestamp",
+                "v": "",
+                "vt": "date"
             },
             {
                 "p": "topic",
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "1",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 250,
-        "y": 280,
+        "x": 170,
+        "y": 180,
         "wires": [
             [
-                "3f858eb8.c338f2"
+                "f63c277a21555427"
             ]
         ]
     },
     {
-        "id": "3f858eb8.c338f2",
-        "type": "mqtt out",
-        "z": "ca825459.08851",
-        "name": "Client publishes message to Edge Connect, topic transaction_log",
-        "topic": "demo/meijer/transaction_log",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "3c9fafa.7dd6a5",
-        "x": 770,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "2ac6380b.9d6338",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Transaction Consumers",
-        "info": "",
-        "x": 350,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "7f84285a.5f11a8",
-        "type": "mqtt in",
-        "z": "ca825459.08851",
-        "name": "Listen on Edge Connect for events to transaction_log",
-        "topic": "demo/meijer/transaction_log",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "3c9fafa.7dd6a5",
-        "nl": false,
-        "rap": false,
-        "inputs": 0,
-        "x": 300,
-        "y": 500,
+        "id": "879fd984aa5242ac",
+        "type": "template",
+        "z": "07533ae1fbb04e11",
+        "name": "Format json payload",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\"event\":\"sample race 1\",\"odds\":\"{{payload.random}}\"}",
+        "output": "json",
+        "x": 140,
+        "y": 260,
         "wires": [
             [
-                "b1134181e07f5d30"
+                "46009b379250fc83"
             ]
         ]
     },
     {
-        "id": "6b43e0c5.aaf19",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Transaction Consumer - cloud 1",
-        "info": "",
-        "x": 240,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "f547f763.cf4fb8",
-        "type": "mqtt in",
-        "z": "ca825459.08851",
-        "name": "Listen on Edge Connect for events to transaction_log",
-        "topic": "demo/meijer/transaction_log",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "3c9fafa.7dd6a5",
-        "nl": false,
-        "rap": false,
-        "inputs": 0,
-        "x": 300,
-        "y": 620,
+        "id": "f63c277a21555427",
+        "type": "random",
+        "z": "07533ae1fbb04e11",
+        "name": "Generate Random Odds",
+        "low": 1,
+        "high": "100",
+        "inte": "false",
+        "property": "payload.random",
+        "x": 150,
+        "y": 220,
         "wires": [
             [
-                "46eea3bbf3b9bd2f"
+                "879fd984aa5242ac"
             ]
         ]
     },
     {
-        "id": "13ba0f13.ac6e29",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Transaction Consumer - cloud 2",
-        "info": "",
-        "x": 240,
-        "y": 580,
+        "id": "b92ab906bcd30148",
+        "type": "debug",
+        "z": "07533ae1fbb04e11",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "e20c8813.f55048",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Transaction Consumer - cloud 3",
-        "info": "",
-        "x": 230,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "c2621511.278748",
-        "type": "http request",
-        "z": "ca825459.08851",
-        "name": "HTTPS Request to Edge Connect API for message block",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 790,
-        "y": 740,
-        "wires": [
-            [
-                "6d1e5edc63131161"
-            ]
-        ]
-    },
-    {
-        "id": "637dd7ce.112b68",
-        "type": "comment",
-        "z": "ca825459.08851",
-        "name": "Note- this consumer method allows for log replay, and for multi-consumer log processing",
-        "info": "",
-        "x": 410,
-        "y": 780,
-        "wires": []
-    },
-    {
-        "id": "e0ccaf23.85c08",
-        "type": "mqtt in",
-        "z": "ca825459.08851",
-        "name": "Listen on Edge Connect for message block assignment",
-        "topic": "demo/meijer/transaction_log",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "3c9fafa.7dd6a5",
-        "nl": false,
-        "rap": false,
-        "inputs": 0,
-        "x": 300,
-        "y": 740,
-        "wires": [
-            [
-                "c2621511.278748"
-            ]
-        ]
-    },
-    {
-        "id": "b1134181e07f5d30",
-        "type": "kafka-producer",
-        "z": "ca825459.08851",
-        "requireAcks": 1,
-        "ackTimeoutMs": 100,
-        "attributes": 0,
-        "x": 860,
-        "y": 500,
-        "wires": []
-    },
-    {
-        "id": "46eea3bbf3b9bd2f",
-        "type": "kafka-producer",
-        "z": "ca825459.08851",
-        "requireAcks": 1,
-        "ackTimeoutMs": 100,
-        "attributes": 0,
-        "x": 860,
-        "y": 620,
-        "wires": []
-    },
-    {
-        "id": "6d1e5edc63131161",
-        "type": "kafka-producer",
-        "z": "ca825459.08851",
-        "requireAcks": 1,
-        "ackTimeoutMs": 100,
-        "attributes": 0,
-        "x": 840,
-        "y": 780,
-        "wires": []
-    },
-    {
-        "id": "97d39296a11ceace",
-        "type": "comment",
-        "z": "48b4356fe2e4f9db",
-        "name": "Stock Broadcast",
-        "info": "",
-        "x": 260,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "983edb0322301693",
-        "type": "mqtt out",
-        "z": "48b4356fe2e4f9db",
-        "name": "Publish Real-time stock updates to Edge Connect, topic {sku}",
-        "topic": "demo/meijer/sku",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "3c9fafa.7dd6a5",
-        "x": 670,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "92cb9a80c7443662",
-        "type": "mqtt in",
-        "z": "48b4356fe2e4f9db",
-        "name": "Listen on Edge Connect for Events on topic {sku}",
-        "topic": "demo/meijer/sku",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "3c9fafa.7dd6a5",
-        "nl": false,
-        "rap": false,
-        "inputs": 0,
-        "x": 200,
+        "id": "46009b379250fc83",
+        "type": "function",
+        "z": "07533ae1fbb04e11",
+        "name": "Add timestamp for latency reporting",
+        "func": "var now = Date.now();\nmsg.payload.timestamp = now\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
         "y": 300,
         "wires": [
             [
-                "782d67378e988492"
+                "b92ab906bcd30148",
+                "1b1486aa54c3e87f"
             ]
         ]
     },
     {
-        "id": "091ca0c2b41342be",
-        "type": "comment",
-        "z": "48b4356fe2e4f9db",
-        "name": "Stock Consumer (Web, App, Signage)",
-        "info": "",
-        "x": 330,
-        "y": 260,
+        "id": "f304ab4ff03427e3",
+        "type": "mqtt in",
+        "z": "1a2d207f770bfa25",
+        "name": "Subscribe to pub/sub events for Race ID",
+        "topic": "demo/cdi/race",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "3c9fafa.7dd6a5",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "df2e46f4a2a3d048",
+                "be63f89e2e43d2ef",
+                "57a7f8393a9d38d3",
+                "a207e6fcb76eceda",
+                "6fd5a39d6fde32a7",
+                "b3a027e2c3f8a6e2"
+            ]
+        ]
+    },
+    {
+        "id": "df2e46f4a2a3d048",
+        "type": "file",
+        "z": "1a2d207f770bfa25",
+        "name": "",
+        "filename": "/data/racedata",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 590,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be63f89e2e43d2ef",
+        "type": "debug",
+        "z": "1a2d207f770bfa25",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 140,
         "wires": []
     },
     {
-        "id": "782d67378e988492",
+        "id": "57a7f8393a9d38d3",
         "type": "ui_text",
-        "z": "48b4356fe2e4f9db",
+        "z": "1a2d207f770bfa25",
         "group": "a5ecdab7.7197d8",
         "order": 3,
         "width": 0,
         "height": 0,
         "name": "",
-        "label": "Display Stock (Web, App, Signage with MQTT Client)",
-        "format": "{{msg.payload}}",
+        "label": "Event Name",
+        "format": "{{msg.payload.event}}",
         "layout": "row-spread",
-        "x": 760,
-        "y": 300,
+        "x": 610,
+        "y": 200,
         "wires": []
     },
     {
-        "id": "23c6e371ea7b1245",
-        "type": "comment",
-        "z": "48b4356fe2e4f9db",
-        "name": "Stock Consumer- Scaleable API Endpoint",
-        "info": "",
-        "x": 340,
-        "y": 360,
+        "id": "b3a027e2c3f8a6e2",
+        "type": "function",
+        "z": "1a2d207f770bfa25",
+        "name": "Calculate Latency",
+        "func": "msg.payload.timestamp = Number(msg.payload.timestamp);\nvar now = Date.now();\nvar then = msg.payload.timestamp;\nmsg.payload.latency = now - then;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 240,
+        "wires": [
+            [
+                "8c862b9278f2a3c9"
+            ]
+        ]
+    },
+    {
+        "id": "a207e6fcb76eceda",
+        "type": "ui_text",
+        "z": "1a2d207f770bfa25",
+        "group": "a5ecdab7.7197d8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Event Odds",
+        "format": "{{msg.payload.odds}}",
+        "layout": "row-spread",
+        "x": 610,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "6fd5a39d6fde32a7",
+        "type": "ui_text",
+        "z": "1a2d207f770bfa25",
+        "group": "a5ecdab7.7197d8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Message Timestamp",
+        "format": "{{msg.payload.timestamp}}",
+        "layout": "row-spread",
+        "x": 640,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "8c862b9278f2a3c9",
+        "type": "ui_text",
+        "z": "1a2d207f770bfa25",
+        "group": "a5ecdab7.7197d8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Message Latency",
+        "format": "{{msg.payload.latency}}",
+        "layout": "row-spread",
+        "x": 630,
+        "y": 320,
         "wires": []
     },
     {
@@ -571,15 +518,15 @@
         "type": "http in",
         "z": "48b4356fe2e4f9db",
         "name": "",
-        "url": "/meijerstock",
+        "url": "/api",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
         "x": 100,
-        "y": 400,
+        "y": 60,
         "wires": [
             [
-                "38c6c5856d08bd4a"
+                "345a2fb2629a2e12"
             ]
         ]
     },
@@ -590,57 +537,26 @@
         "name": "Return Retained message on {sku} topic to API consumer",
         "statusCode": "",
         "headers": {},
-        "x": 750,
-        "y": 460,
+        "x": 250,
+        "y": 140,
         "wires": []
     },
     {
-        "id": "38c6c5856d08bd4a",
-        "type": "mqtt-in-dynamicsub",
+        "id": "345a2fb2629a2e12",
+        "type": "file in",
         "z": "48b4356fe2e4f9db",
-        "name": "Query Edge Connect for last message on topic {sku}",
-        "qos": "2",
-        "datatype": "auto",
-        "unsubscribe-after-first-msg-recv": false,
-        "debug-subscribe": false,
-        "broker": "3c9fafa.7dd6a5",
-        "x": 480,
-        "y": 400,
+        "name": "",
+        "filename": "/data/racedata",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 120,
+        "y": 100,
         "wires": [
             [
                 "067a9ae216cf5cb1"
-            ]
-        ]
-    },
-    {
-        "id": "25504fbf2326c7b2",
-        "type": "redis-in",
-        "z": "48b4356fe2e4f9db",
-        "server": "",
-        "command": "blpop",
-        "name": "Push from DB",
-        "topic": "",
-        "obj": true,
-        "timeout": 0,
-        "x": 90,
-        "y": 140,
-        "wires": [
-            [
-                "983edb0322301693"
-            ]
-        ]
-    },
-    {
-        "id": "b18f9b365e5175c1",
-        "type": "kafka-consumer",
-        "z": "48b4356fe2e4f9db",
-        "outOfRangeOffset": "earliest",
-        "fromOffset": "latest",
-        "x": 100,
-        "y": 180,
-        "wires": [
-            [
-                "983edb0322301693"
             ]
         ]
     }
