@@ -32,6 +32,14 @@
         "env": []
     },
     {
+        "id": "702b81be6954a355",
+        "type": "tab",
+        "label": "Latency Reporter",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "3c9fafa.7dd6a5",
         "type": "mqtt-broker",
         "name": "",
@@ -79,7 +87,7 @@
     {
         "id": "cb2f7c9a2ceaaf2c",
         "type": "ui_tab",
-        "name": "Home",
+        "name": "Latency",
         "icon": "dashboard",
         "disabled": false,
         "hidden": false
@@ -184,7 +192,7 @@
     {
         "id": "54f7ecc644f21e27",
         "type": "ui_group",
-        "name": "Home",
+        "name": "Latency Results",
         "tab": "cb2f7c9a2ceaaf2c",
         "order": 1,
         "disp": true,
@@ -194,7 +202,7 @@
     {
         "id": "a5ecdab7.7197d8",
         "type": "ui_group",
-        "name": "Discover and Announce Application",
+        "name": "Odds Card",
         "tab": "16e47346.ac956d",
         "order": 1,
         "disp": true,
@@ -217,7 +225,7 @@
     {
         "id": "16e47346.ac956d",
         "type": "ui_tab",
-        "name": "Discover and Announce",
+        "name": "Real Time Event API",
         "icon": "dashboard",
         "disabled": false,
         "hidden": false
@@ -457,11 +465,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 290,
+        "x": 270,
         "y": 240,
         "wires": [
             [
-                "8c862b9278f2a3c9"
+                "8c862b9278f2a3c9",
+                "dc2aebb19b9c5c3e"
             ]
         ]
     },
@@ -514,6 +523,24 @@
         "wires": []
     },
     {
+        "id": "dc2aebb19b9c5c3e",
+        "type": "mqtt out",
+        "z": "1a2d207f770bfa25",
+        "name": "Publish Latency Results to data broker",
+        "topic": "demo/cdi/latency",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "3c9fafa.7dd6a5",
+        "x": 610,
+        "y": 380,
+        "wires": []
+    },
+    {
         "id": "7fd7ee0be984bd15",
         "type": "http in",
         "z": "48b4356fe2e4f9db",
@@ -557,6 +584,97 @@
         "wires": [
             [
                 "067a9ae216cf5cb1"
+            ]
+        ]
+    },
+    {
+        "id": "e4432b4e17744c42",
+        "type": "mqtt in",
+        "z": "702b81be6954a355",
+        "name": "Subscribe to Latency feed from data broker",
+        "topic": "demo/cdi/latency",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "3c9fafa.7dd6a5",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 160,
+        "wires": [
+            [
+                "2df26958a2fcc877"
+            ]
+        ]
+    },
+    {
+        "id": "cabbd6d8a5c54c0c",
+        "type": "ui_chart",
+        "z": "702b81be6954a355",
+        "name": "Publish-to-Subscribe Latency Results",
+        "group": "54f7ecc644f21e27",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Publish-to-Subscribe Latency Results",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 510,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2df26958a2fcc877",
+        "type": "change",
+        "z": "702b81be6954a355",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.latency",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 280,
+        "wires": [
+            [
+                "cabbd6d8a5c54c0c"
             ]
         ]
     }
